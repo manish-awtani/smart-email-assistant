@@ -3,6 +3,8 @@ import { useState } from "react";
 import "./App.css";
 import { Box, Button, CircularProgress, Container, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
 import axios from "axios";
+import useTheme from "./hooks/useTheme";
+import ThemeToggle from "./components/ThemeToggle/ThemeToggle";
 
 function App() {
   const [emailContent, setEmailContent] = useState("");
@@ -10,13 +12,14 @@ function App() {
   const [generatedReply, setGeneratedReply] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const { isDarkMode, toggleTheme } = useTheme();
 
   const handleSubmit = async () => {
     setLoading(true);
     setError('');
     try {
       const response = await axios.post(
-        "http://localhost:8080/api/email/generate", {emailContent, tone}
+        "http://localhost:8080/api/email/generate", { emailContent, tone }
       );
       setGeneratedReply(typeof response.data === "string" ? response.data : JSON.stringify(response.data));
     } catch (error) {
@@ -32,6 +35,7 @@ function App() {
       <Typography variant="h3" component="h1" gutterBottom>
         Email Reply Generator
       </Typography>
+      <ThemeToggle isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
 
       <Box sx={{ mx: 3 }}>
         <TextField
@@ -67,27 +71,27 @@ function App() {
         </Button>
       </Box>
       {error && (
-        <Typography color="error" sx={{mb:2}}>
+        <Typography color="error" sx={{ mb: 2 }}>
           {error}
         </Typography>
       )}
 
       {generatedReply && (
-        <Box sx ={{mt:3}}>
+        <Box sx={{ mt: 3 }}>
           <Typography variant="h6" gutterBottom>
             Generated Reply:
           </Typography>
-          <TextField 
-          fullWidth
-          multiline
-          rows={6}
-          variant="outlined"
-          value={generatedReply || ""}
-          inputProps={{readOnly: true}}
+          <TextField
+            fullWidth
+            multiline
+            rows={6}
+            variant="outlined"
+            value={generatedReply || ""}
+            inputProps={{ readOnly: true }}
           />
           <Button
             variant="outlines"
-            sx={{mt: 2}}
+            sx={{ mt: 2 }}
             onClick={() => navigator.clipboard.writeText(generatedReply)}
           >
             Copy to Clipboard
