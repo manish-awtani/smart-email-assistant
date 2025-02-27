@@ -1,0 +1,15 @@
+/* body {
+    background-color: black;
+    color: white;
+  } */
+
+.dark-mode {
+  --bg-color: #1a1a1a;
+  --text-color: #f0f0f0;
+  --border-color: #444444;
+  --input-bg: #2a2a2a;
+  --button-bg: #5d7bf9;
+  --button-text: white;
+  --card-bg: #2a2a2a;
+  --shadow-color: rgba(0, 0, 0, 0.3);
+}
