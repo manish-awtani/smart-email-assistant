@@ -5,6 +5,9 @@ import { Box, Button, CircularProgress, Container, FormControl, InputLabel, Menu
 import axios from "axios";
 import useTheme from "./hooks/useTheme";
 import ThemeToggle from "./components/ThemeToggle/ThemeToggle";
+import EmailInput from "./components/EmailInput/EmailInput";
+import ReplyOutput from "./components/ReplyOutput/ReplyOutput";
+import ToneSelector from "./components/ToneSelector/ToneSelector";
 
 function App() {
   const [emailContent, setEmailContent] = useState("");
@@ -14,7 +17,11 @@ function App() {
   const [error, setError] = useState("");
   const { isDarkMode, toggleTheme } = useTheme();
 
-  const handleSubmit = async () => {
+  const handleGenerateReply = async () => {
+    if (!emailContent.trim()) {
+      alert("Please paste an email to generate a reply");
+      return;
+    }
     setLoading(true);
     setError('');
     try {
@@ -31,74 +38,31 @@ function App() {
   }
 
   return (
-    <Container maxWidth="md" sx={{ py: 4 }}>
-      <Typography variant="h3" component="h1" gutterBottom>
-        Email Reply Generator
-      </Typography>
-      {/* <ThemeToggle isDarkMode={isDarkMode} toggleTheme={toggleTheme} /> */}
+    <div className="app-container">
+      <header>
+        <h1>Email Reply Generator</h1>
+        <ThemeToggle isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
+      </header>
 
-      <Box sx={{ mx: 3 }}>
-        <TextField
-          fullWidth
-          multiline
-          rows={6}
-          variant="outlined"
-          label="Original Email Content"
-          onChange={(e) => setEmailContent(e.target.value)}
-          sx={{ mb: 2 }}
-        />
-        <FormControl fullWidth sx={{ mb: 2 }}>
-          <InputLabel>Tone (Optional)</InputLabel>
-          <Select
-            value={tone || ""}
-            label={"Tone (Optional)"}
-            onChange={(e) => setTone(e.target.value)}
+      <main>
+        <EmailInput emailContent={emailContent} setEmailContent={setEmailContent} />
+
+        <div className="controls">
+          <ToneSelector tone={tone} setTone={setTone} />
+          <button 
+            className="generate-btn" 
+            onClick={handleGenerateReply} 
+            disabled={loading}
           >
-            <MenuItem value="">None</MenuItem>
-            <MenuItem value="professional">Professional</MenuItem>
-            <MenuItem value="casual">Casual</MenuItem>
-            <MenuItem value="friendly">Friendly</MenuItem>
-          </Select>
-        </FormControl>
+            {/* {loading ? 'Generating...' : 'Generate Reply'} */}
+            {loading ? <CircularProgress size={24} color="white"/>  : 'Generate Reply'}
+          </button>
+        </div>
 
-        <Button
-          variant="contained"
-          onClick={handleSubmit}
-          disabled={!emailContent || loading}
-          fullWidth
-        >
-          {loading ? <CircularProgress size={24} /> : "Generate Reply"}
-        </Button>
-      </Box>
-      {error && (
-        <Typography color="error" sx={{ mb: 2 }}>
-          {error}
-        </Typography>
-      )}
-
-      {generatedReply && (
-        <Box sx={{ mt: 3 }}>
-          <Typography variant="h6" gutterBottom>
-            Generated Reply:
-          </Typography>
-          <TextField
-            fullWidth
-            multiline
-            rows={6}
-            variant="outlined"
-            value={generatedReply || ""}
-            inputProps={{ readOnly: true }}
-          />
-          <Button
-            variant="outlines"
-            sx={{ mt: 2 }}
-            onClick={() => navigator.clipboard.writeText(generatedReply)}
-          >
-            Copy to Clipboard
-          </Button>
-        </Box>
-      )}
-    </Container>
+        {error && <p className="error-message">{error}</p>}
+        <ReplyOutput generatedReply={generatedReply} />
+      </main>
+    </div>
   );
 }
 
