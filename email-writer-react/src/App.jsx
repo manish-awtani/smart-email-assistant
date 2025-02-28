@@ -35,7 +35,7 @@ function App() {
       <Typography variant="h3" component="h1" gutterBottom>
         Email Reply Generator
       </Typography>
-      <ThemeToggle isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
+      {/* <ThemeToggle isDarkMode={isDarkMode} toggleTheme={toggleTheme} /> */}
 
       <Box sx={{ mx: 3 }}>
         <TextField
