@@ -153,5 +153,4 @@ Feel free to fork the repository, open issues, or submit pull requests for impro
 
 ## Credits
 
-Built by Manish Awtani  
-Powered by **Gemini AI**
+Built by ***Manish Awtani***
